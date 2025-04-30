@@ -23,13 +23,6 @@
 
 Hyperparameter ოპტიმიზაცია: GridSearchCV და Optuna-ს გამოყენებაც ვცადე, მარა ორივემ მემორიზე გაჭედა ჯერჯერობით. თუ რამე წინსვლა იქნება ამ მხრივ დავწერ მერე. 
 
-შეფასება "roc_auc" მეტრიკით
-
-საბოლოო მოდელის შერჩევის დასაბუთება:
-XGBoost საუკეთესო შედეგს აღწევდა CV-ის მიხედვით
-
-ოპტიმიზირებული პარამეტრები: max_depth, learning_rate, n_estimators, subsample, tree_method
-
 **MLflow Tracking
 **
 MLflow ექსპერიმენტის ბმული: https://dagshub.com/nkikn21/IEEE-CIS-Fraud-Detection.mlflow/#/experiments/2?searchFilter=&orderByKey=attributes.start_time&orderByAsc=false&startTime=ALL&lifecycleFilter=Active&modelVersionFilter=All+Runs&datasetsFilter=W10%3D
@@ -41,5 +34,36 @@ F1 - 0.21851761052545554
 AUC - 0.7970027042779819.
 ესენია პირვეელი მოდელის შედეგები, AUC ნორმალურია, მარა f1 საშინელია, ამიტო გავაუმჯობესებ და სხვა მიდგომებს დავამატებ, უკეთესს პრეპროცესინგს. 
 
-მეორე მოდელში მცირე ცვლილებები განვახორციეელე, one-hot და woe-ს სრეშოლდი 3-ზე ავიღე, RFE-ის მერე 30 დავტოვე და ანდერსემფლერში ის მნიშვნელობა 0.8 ავიღე და ნუ ცოტათი გაიზარდა F1-ც(0.23614581331283235) და  AUC-ც(0.8315836733554125). 
+მეორე მოდელში მცირე ცვლილებები განვახორციეელე, one-hot და woe-ს სრეშოლდი 3-ზე ავიღე, RFE-ის მერე 30 დავტოვე და ანდერსემფლერში ის მნიშვნელობა 0.8 ავიღე, კიდე ნალების მნიშვნელობა თუ 80%-ზე მეტი იყო გადავყარე ეგეთი Features და ნუ ცოტათი გაიზარდა F1-ც(0.23614581331283235) და  AUC-ც(0.8315836733554125). 
+
+
+**LightGBM:**
+
+**NAN მნიშვნელობების დამუშავება:
+**
+კატეგორიული ცვლადებს ამ შემთხვევაში ვავსებ მოდით, ნუმერიკალებს მედიანით. ასევე ვდროფავ ქოლუმნებს, სადაც 80%-ზე მეტი ნან მნიშვნელობაა. 
+
+**Feature Engineering:
+**გამოვიყენე როგორც WOE ენკოდინგი, ასევე One-Hot. Threshold-ად unique მნიშვნელობებისთვის ავიღე 3. 
+
+**Feature Selection:
+**
+კორელაციის ფილტრი და RFE გამოვიყენე. კორელაციის სრეშოლდი 80% მქონდა, RFE-დან 30 Feature დავიტოვე. 
+
+საბოლოო ფაიფლაინში დავამატე სქეილერი და ანდერსემფლერი, სადაც sampling_strategy 0.4 ავიღე.  
+
+**Training:
+**
+
+**MLflow Tracking
+**
+MLflow ექსპერიმენტის ბმული: https://dagshub.com/nkikn21/IEEE-CIS-Fraud-Detection.mlflow/#/experiments/5?searchFilter=&orderByKey=attributes.start_time&orderByAsc=false&startTime=ALL&lifecycleFilter=Active&modelVersionFilter=All+Runs&datasetsFilter=W10%3D
+
+ჩაწერილი მეტრიკები:
+Precision - 0.27346303501945524
+Recall - 0.5868403473613895
+F1 - 0.3730756980571186
+AUC - 0.8849056317788666.
+ესენია პირვეელი მოდელის შედეგები LGBM-ისთვის, AUC კარგია, მარა f1-მაც მოიმატა მარა მაინც საკმაოდ ცუდი შედეგია.  
+
 
